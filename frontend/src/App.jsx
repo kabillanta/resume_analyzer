@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchJobs, analyzeResume } from "../scripts/api";
 import ReactMarkdown from "react-markdown";
+import "./App.css";
 
 function App() {
   const [jobs, setJobs] = useState([]);
@@ -24,43 +25,41 @@ function App() {
   };
 
   return (
-    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+    <div className="container">
       <h1>🎯 Resume Analyzer</h1>
 
-      <form onSubmit={handleSubmit}>
-        <label>
-          Choose Job Role:
-          <select
-            value={selectedJob}
-            onChange={(e) => setSelectedJob(e.target.value)}
-          >
-            <option value="">-- Select --</option>
-            {jobs.map((job) => (
-              <option key={job.id} value={job.id}>
-                {job.title} @ {job.company}
-              </option>
-            ))}
-          </select>
-        </label>
+      <form onSubmit={handleSubmit} className="analyzer-form">
+        <label htmlFor="job-select">Choose Job Role</label>
+        <select
+          id="job-select"
+          value={selectedJob}
+          onChange={(e) => setSelectedJob(e.target.value)}
+          required
+        >
+          <option value="">-- Select a job --</option>
+          {jobs.map((job) => (
+            <option key={job.id} value={job.id}>
+              {job.title} @ {job.company}
+            </option>
+          ))}
+        </select>
 
-        <br /><br />
-
-        <label>
-          Upload Resume (PDF):
-          <input type="file" accept=".pdf" onChange={(e) => setFile(e.target.files[0])} />
-        </label>
-
-        <br /><br />
+        <label htmlFor="resume-upload">Upload Resume (PDF)</label>
+        <input
+          id="resume-upload"
+          type="file"
+          accept=".pdf"
+          onChange={(e) => setFile(e.target.files[0])}
+          required
+        />
 
         <button type="submit">Analyze Resume</button>
       </form>
 
-      <br />
-
       {result && (
-        <div style={{ whiteSpace: "pre-wrap", border: "1px solid #ccc", padding: "1rem", borderRadius: "5px" }}>
-          <h2>AI Feedback:</h2>
-          <Reactmarkdown>{result}</Reactmarkdown>
+        <div className="result-box">
+          <h2>📋 AI Feedback</h2>
+          <ReactMarkdown>{result}</ReactMarkdown>
         </div>
       )}
     </div>
